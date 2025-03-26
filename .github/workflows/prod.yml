@@ -2,7 +2,7 @@ name: Main Flow
 on:
     push:
         branches:
-        - 'master'
+        - 'main'
 env:
     SERVICE_NAME: cm-usuarios-auth
     REGION: us-central1
