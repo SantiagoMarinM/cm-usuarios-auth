@@ -37,7 +37,7 @@ jobs:
             - name: Create ENV File
               run: echo ${{ secrets.ENV_PROD }} | base64 --decode > .env
             - name: Google Cloud authentication
-              uses: google-github-actions/auth@v0
+              uses: google-github-actions/auth@v1
               with:
                  credentials_json: ${{ secrets.CM_GCP_KEY }}
                  project_id: ${{ env.GCP_PROJECT }}
