@@ -4,7 +4,7 @@ WORKDIR /root/
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --production=true
+RUN npm_config_lifecycle_event=ignore yarn install --production=true
 
 COPY ./dist ./dist/
 
