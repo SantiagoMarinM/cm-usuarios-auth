@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: cm-usuarios-auth
+    namespace: apis
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: cm-usuarios-auth
+    template:
+        metadata:
+            labels:
+                app: cm-usuarios-auth
+        spec:
+            containers:
+                - name: cm-usuarios-auth
+                  image: gcr.io/google-samples/hello-app:1.0
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 8080
