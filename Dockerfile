@@ -4,7 +4,8 @@ WORKDIR /root/
 
 COPY package.json yarn.lock ./
 
-RUN npm_config_lifecycle_event=ignore yarn install --production=true
+ENV HUSKY=0
+RUN yarn install --production=true
 
 COPY ./dist ./dist/
 
