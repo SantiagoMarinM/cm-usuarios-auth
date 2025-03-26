@@ -1,0 +1,111 @@
+name: Main Flow
+on:
+    push:
+        branches:
+            - 'feature/**'
+env:
+    SERVICE_NAME: ${{ github.event.repository.name }}
+    REGION: us-central1
+    GCP_PROJECT: ${{ secrets.PROJECT_ID_DEV }}
+    ENV_FILE: ENV_DEV
+jobs:
+    build_and_deploy:
+        runs-on: ubuntu-latest
+        name: Build and deploy
+        outputs:
+            url: ${{ steps.extract_url.outputs.url }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Cache node modules
+              uses: actions/cache@v3
+
+              with:
+                  path: '**/node_modules'
+                  key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+            - name: Install and Build
+              uses: ./.github/actions/build
+            - name: Build tests
+              uses: ./.github/actions/quality
+            - name: Create ENV File
+              run: echo ${{ secrets[env.ENV_FILE] }} | base64 --decode > .env
+            - name: Set up Cloud SDK
+              uses: google-github-actions/setup-gcloud@master
+              with:
+                  project_id: ${{ secrets.PROJECT_ID_DEV }}
+                  service_account_key: ${{ secrets.CM_GCP_KEY }}
+                  export_default_credentials: true
+            - name: Build and deploy image
+              run: PROJECT_ID=$GCP_PROJECT COMMIT_SHA=${{ github.sha }} SERVICE_NAME=$SERVICE_NAME make deploy
+            - name: Deploy to Cloud Run
+              run: |-
+                  gcloud run deploy $SERVICE_NAME \
+                    --image gcr.io/$GCP_PROJECT/$SERVICE_NAME:${{ github.sha }} \
+                    --allow-unauthenticated \
+                    --region $REGION \
+                    --max-instances 2
+            - name: Get URL Cloud Run
+              shell: bash
+              run: echo "##[set-output name=url;]$(gcloud run services describe $SERVICE_NAME --platform managed --region $REGION --format 'value(status.url)')"
+              id: extract_url
+    # terraform:
+    #     runs-on: ubuntu-latest
+    #     name: Infra as Code
+    #     needs: build_and_deploy
+    #     steps:
+    #         - name: Checkout
+    #           uses: actions/checkout@v2
+    #         - name: Set up Cloud SDK
+    #           uses: google-github-actions/setup-gcloud@master
+    #           with:
+    #               project_id: ${{ secrets.PROJECT_ID_DEV }}
+    #               service_account_key: ${{ secrets.CM_GCP_KEY }}
+    #               export_default_credentials: true
+    #         - name: Setup Terraform
+    #           uses: hashicorp/setup-terraform@v1
+    #         - name: Init Terraform
+    #           run: make terraform-init
+    #         - name: Create Workspace Terraform
+    #           run: PROJECT_ID=$GCP_PROJECT ENV=dev  make terraform-create-workspace
+    #         - name: Apply Terraform
+    #           run: PROJECT_ID=$GCP_PROJECT ENV=dev  make terraform-apply
+    slackNotification:
+        name: Slack Notification
+        runs-on: ubuntu-latest
+        needs: [build_and_deploy]
+        if: ${{ success() }}
+        steps:
+            - uses: actions/checkout@v2
+            - name: Slack Notification
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                  SLACK_CHANNEL: alerts
+                  SLACK_COLOR: ${{ job.status }}
+                  SLACK_ICON: https://github.com/coordinadora-mercantil.png?size=48
+                  SLACK_TITLE: ${{ github.repository }}
+                  SLACK_MESSAGE: |-
+                      ¡Grandioso! El pipeline del proyecto ${{ github.repository }} fue exitoso
+                      Comprueba la URL de tu servicio en ${{ needs.build_and_deploy.outputs.url }} :rocket:
+                  SLACK_USERNAME: Pol
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                  SLACK_FOOTER: 'Made with <3 by Coordinadora'
+    slackNotificationFailure:
+        name: Slack Notification failure
+        runs-on: ubuntu-latest
+        needs: [build_and_deploy]
+        if: ${{ failure() }}
+        steps:
+            - uses: actions/checkout@v2
+            - name: Slack Notification
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                  SLACK_CHANNEL: alerts
+                  SLACK_COLOR: '#FF0000'
+                  SLACK_ICON: https://github.com/coordinadora-mercantil.png?size=48
+                  SLACK_TITLE: ${{ github.repository }}
+                  SLACK_MESSAGE: |-
+                      El pipeline del proyecto ${{ github.repository }} no fue exitoso
+                      ¡Lo siento mucho :cry:! A la próxima se corrige, no te preocupes por eso.
+                  SLACK_USERNAME: Pol
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                  SLACK_FOOTER: 'Made with <3 by Coordinadora'
