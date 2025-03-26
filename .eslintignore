@@ -1,0 +1,5 @@
+**/*.config.js
+.eslintrc.js
+ruta.ts
+getNestedValue.ts
+sortByColumn.ts
