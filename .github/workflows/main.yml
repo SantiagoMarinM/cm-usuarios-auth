@@ -42,11 +42,6 @@ jobs:
         run: |
           export $(cat .env | grep -v '^#' | xargs) && npm run test:coverage
 
-      - name: Show coverage
-        run: |
-          echo "Resumen de cobertura:"
-          npx jest --coverage --coverageReporters=text-summary
-
       - name: Google Cloud authentication
         uses: google-github-actions/auth@v1
         with:
