@@ -13,16 +13,14 @@ import { injectable } from 'inversify';
 import { ValidarTokenResponse } from '../application/data/out/IValidarTokenResponse';
 import { IValidarTokenIn } from '../application/data/in/IValidarTokenIn';
 import { IGenerarTokenResponse } from '../application/data/out/IGenerarTokenResponse';
-import { ErrorMensajeStatus } from '@common/interfaces/errorTypes';
+import { ErrorMensajeStatus } from '@common/interfaces';
 
 @injectable()
 export default class ClienteTokenRouter {
     async generarToken(req: Request<IValidarTokenIn>): Promise<Response<IGenerarTokenResponse>> {
         const headers = req.headers as Record<string, string>;
         new JsonValidator().validate(schemas.GenerarTokenSchema, headers);
-
         const generarTokenUseCase = GLOBAL_CONTAINER.get<GenerarTokenUseCase>(TYPESDEPENDENCIES.GenerarTokenUseCase);
-
         try {
             const resultado = await generarTokenUseCase.execute(headers);
             return this.respuestaGenerarTokenExitoso(resultado);

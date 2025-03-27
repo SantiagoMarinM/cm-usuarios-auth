@@ -12,12 +12,10 @@ export default class GenerarTokenUseCase {
         TYPESDEPENDENCIES.ValidarIdClienteUseCase,
     );
 
-    async execute(data: any): Promise<string> {
+    async execute(data: Record<string, string>): Promise<string> {
         const cliente = await this.validarIdClienteUseCase.execute(data['x-client-id']);
         const secretKey = ENV.LLAVE_SECRETA ?? 'secretKey';
-
         if (!cliente.activo) throw new UNAUTHORIZED('Acceso no autorizado', '401', 'El cliente no se encuentra activo');
-
         try {
             const token = jwt.sign(
                 {
