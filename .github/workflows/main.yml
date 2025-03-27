@@ -39,9 +39,10 @@ jobs:
         run: echo ${{ secrets.ENV_PROD }} | base64 --decode > .env
 
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: |
+          export $(cat .env | grep -v '^#' | xargs) && npm run test:coverage
 
-      - name: Mostrar resumen de coverage en consola
+      - name: Show coverage
         run: |
           echo "Resumen de cobertura:"
           npx jest --coverage --coverageReporters=text-summary
