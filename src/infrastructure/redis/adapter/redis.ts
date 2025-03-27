@@ -13,7 +13,6 @@ const getRedisConnection = (): RedisClient => {
         adapter.rpush('CONEXIONES', `Conectado ${date}`);
         console.log('CONEXIÓN DE REDIS AUTENTICACION ESTABLECIDA');
     });
-    console.log('host_redis>', host, 'port_redis>', port);
     return adapter;
 };
 export const RedisClientesConnection = getRedisConnection();
