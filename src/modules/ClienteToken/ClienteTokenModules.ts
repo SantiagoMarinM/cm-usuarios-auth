@@ -6,6 +6,8 @@ import { createDependencies } from './dependencies/Dependencies';
 
 export default class ClientesModules implements IModule {
     private readonly moduloRuta = '/';
+    private readonly controller = new ClienteTokenRouter();
+
     constructor() {
         createDependencies();
         createDependencyContainer();
@@ -16,17 +18,17 @@ export default class ClientesModules implements IModule {
             {
                 metodo: HTTPMETODO.GET,
                 url: '/',
-                evento: ClienteTokenRouter.prototype.generarToken,
+                evento: this.controller.generarToken.bind(this.controller),
             },
             {
                 metodo: HTTPMETODO.GET,
                 url: '/validar-token',
-                evento: ClienteTokenRouter.prototype.validarToken,
+                evento: this.controller.validarToken.bind(this.controller),
             },
             {
                 metodo: HTTPMETODO.DELETE,
                 url: '/redis',
-                evento: ClienteTokenRouter.prototype.eliminarRedis,
+                evento: this.controller.eliminarRedis.bind(this.controller),
             },
         ];
     };

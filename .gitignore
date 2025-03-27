@@ -1,6 +1,11 @@
 dist
 node_modules
 
+# Entornos
+.env
+.env.txt
+.env.local
+
 # Logs
 /**/*.log
 /logs
@@ -29,7 +34,4 @@ coverage
 # IDE - VSCode
 .vscode
 .terraform
-.env.txt
-.env.local
-
 yarn.lock

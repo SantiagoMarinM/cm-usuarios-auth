@@ -13,75 +13,95 @@ import { injectable } from 'inversify';
 import { ValidarTokenResponse } from '../application/data/out/IValidarTokenResponse';
 import { IValidarTokenIn } from '../application/data/in/IValidarTokenIn';
 import { IGenerarTokenResponse } from '../application/data/out/IGenerarTokenResponse';
+import { ErrorMensajeStatus } from '@common/interfaces/errorTypes';
 
 @injectable()
 export default class ClienteTokenRouter {
     async generarToken(req: Request<IValidarTokenIn>): Promise<Response<IGenerarTokenResponse>> {
-        const generarTokenUseCase = GLOBAL_CONTAINER.get<GenerarTokenUseCase>(TYPESDEPENDENCIES.GenerarTokenUseCase);
-        const dataRequest = req.headers as Record<string, string>;
-        new JsonValidator().validate(schemas.GenerarTokenSchema, dataRequest);
-        try {
-            const resultado = await generarTokenUseCase.execute(dataRequest);
+        const headers = req.headers as Record<string, string>;
+        new JsonValidator().validate(schemas.GenerarTokenSchema, headers);
 
-            const response = {
-                isError: false,
-                statusCode: +EXCEPCIONES_GLOBALES.PETICION_EXITOSA.CODIGO,
-                autorizado: true,
-                token: resultado,
-                message: 'Token generado exitosamente',
-            };
-            return { response, status: 200 };
+        const generarTokenUseCase = GLOBAL_CONTAINER.get<GenerarTokenUseCase>(TYPESDEPENDENCIES.GenerarTokenUseCase);
+
+        try {
+            const resultado = await generarTokenUseCase.execute(headers);
+            return this.respuestaGenerarTokenExitoso(resultado);
         } catch (error) {
-            return {
-                response: {
-                    isError: true,
-                    autorizado: false,
-                    token: null,
-                    message: error.error.message,
-                },
-                status: error.statusCode,
-            };
+            return this.respuestaGenerarTokenError(error);
         }
     }
 
     async validarToken(req: Request<IValidarTokenIn>): Promise<Response<ValidarTokenResponse>> {
         const headers = req.headers as Record<string, string>;
         new JsonValidator().validate(schemas.ValidarTokenSchema, headers);
-        const token = headers.authorization.replace(/^Bearer\s+/i, '');
         const validarTokenUseCase = GLOBAL_CONTAINER.get<ValidarTokenUseCase>(TYPESDEPENDENCIES.ValidarTokenUseCase);
+        const token = headers.authorization.replace(/^Bearer\s+/i, '');
+        const idCliente = headers['x-client-id'];
         try {
-            await validarTokenUseCase.execute(headers['x-client-id'], token);
-
-            return {
-                response: {
-                    isError: false,
-                    autorizado: true,
-                    message: 'Token válido',
-                },
-                status: 200,
-            };
+            await validarTokenUseCase.execute(idCliente, token);
+            return this.respuestaValidarTokenExitoso();
         } catch (error) {
-            return {
-                response: {
-                    isError: true,
-                    autorizado: false,
-                    message: error.error.message ?? 'Token inválido',
-                },
-                status: error.statusCode ?? 401,
-            };
+            return this.respuestaValidarTokenError(error);
         }
     }
 
     async eliminarRedis(): Promise<Response<ResponseMethod<void>>> {
         const redis = GLOBAL_CONTAINER.get<IClienteRedis>(TYPESDEPENDENCIES.RedisRepoCache);
-
         await redis.flushAll();
-
-        const response = {
-            isError: false,
-            statusCode: +EXCEPCIONES_GLOBALES.PETICION_EXITOSA.CODIGO,
-            message: 'Datos eliminados exitosamente',
+        return {
+            response: {
+                isError: false,
+                statusCode: +EXCEPCIONES_GLOBALES.PETICION_EXITOSA.CODIGO,
+                message: 'Datos eliminados exitosamente',
+            },
+            status: 200,
         };
-        return { response, status: 200 };
+    }
+
+    private respuestaGenerarTokenExitoso(token: string): Response<IGenerarTokenResponse> {
+        return {
+            response: {
+                isError: false,
+                autorizado: true,
+                statusCode: +EXCEPCIONES_GLOBALES.PETICION_EXITOSA.CODIGO,
+                token,
+                message: 'Token generado exitosamente',
+            },
+            status: 200,
+        };
+    }
+
+    private respuestaGenerarTokenError(error: ErrorMensajeStatus): Response<IGenerarTokenResponse> {
+        return {
+            response: {
+                isError: true,
+                autorizado: false,
+                token: null,
+                message: error?.error?.message ?? 'Error generando token',
+            },
+            status: error?.statusCode ?? 400,
+        };
+    }
+
+    private respuestaValidarTokenExitoso(): Response<ValidarTokenResponse> {
+        return {
+            response: {
+                isError: false,
+                autorizado: true,
+                message: 'Token válido',
+            },
+            status: 200,
+        };
+    }
+
+    private respuestaValidarTokenError(error: ErrorMensajeStatus): Response<ValidarTokenResponse> {
+        return {
+            response: {
+                isError: true,
+                autorizado: false,
+                message: error?.error?.message ?? 'Token inválido',
+            },
+            status: error?.statusCode ?? 401,
+        };
     }
 }
