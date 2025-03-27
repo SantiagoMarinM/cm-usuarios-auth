@@ -38,6 +38,15 @@ jobs:
       - name: Install and Build
         uses: ./.github/actions/build
 
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+
       - name: Create ENV File
         run: echo ${{ secrets.ENV_PROD }} | base64 --decode > .env
 

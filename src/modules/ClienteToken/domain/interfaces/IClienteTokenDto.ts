@@ -7,7 +7,5 @@ export interface IDataCrearClienteToken {
 }
 
 export interface IDataValidarIdClienteOut {
-    apikey: string;
     activo: boolean;
-    tiempo_expiracion: string;
 }

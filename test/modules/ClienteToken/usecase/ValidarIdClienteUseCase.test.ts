@@ -45,7 +45,7 @@ describe('ValidarIdClienteUseCase', () => {
 
     it('debería buscar en el repositorio si el cliente no está en Redis', async () => {
         const id_cliente = '123';
-        const mockCliente = { activo: true, apikey: 'api-key', tiempo_expiracion: '2h' };
+        const mockCliente = { activo: true, apikey: 'api-key', tiempo_expiracion: '1h' };
         redisMock.getIdCliente.mockResolvedValue(null);
         repositoryMock.validarIdCliente.mockResolvedValue(mockCliente);
 
@@ -56,7 +56,6 @@ describe('ValidarIdClienteUseCase', () => {
         expect(repositoryMock.validarIdCliente).toHaveBeenCalledWith(id_cliente);
         expect(redisMock.setClienteToken).toHaveBeenCalledWith(`auth${id_cliente}`, {
             activo: mockCliente.activo,
-            apikey: mockCliente.apikey,
             tiempo_expiracion: mockCliente.tiempo_expiracion,
         });
     });
