@@ -24,7 +24,7 @@ export default class GenerarTokenUseCase {
                     activo: cliente.activo,
                 },
                 secretKey,
-                { expiresIn: cliente.tiempo_expiracion },
+                { expiresIn: '1h' },
             );
 
             return token;

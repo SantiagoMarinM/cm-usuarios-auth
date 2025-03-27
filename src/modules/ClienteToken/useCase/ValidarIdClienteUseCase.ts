@@ -22,7 +22,7 @@ export default class ValidarIdClienteUseCase {
             if (validarIdClientDao.activo) {
                 this.redis.setClienteToken(`auth${nombre_cliente}`, {
                     activo: validarIdClientDao.activo,
-                    tiempo_expiracion: validarIdClientDao.tiempo_expiracion,
+                    tiempo_expiracion: '1h',
                 });
             }
             return validarIdClientDao;

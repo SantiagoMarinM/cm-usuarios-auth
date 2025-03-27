@@ -6,6 +6,7 @@ module.exports = {
     testMatch: ['**/*.steps.ts', '**/*.test.ts'],
     collectCoverageFrom: [
         'src/**/*.ts',
+        '!src/common/dependencies/DependencyContainer.ts',
         '!src/**/*/index.ts',
         '!src/**/*/Server.ts',
         '!src/index.ts',

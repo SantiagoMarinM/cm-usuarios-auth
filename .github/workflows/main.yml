@@ -4,12 +4,9 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 env:
-  SERVICE_NAME: cm-usuarios-auth
+  SERVICE_NAME: santiago-cm-usuarios-auth
   REGION: us-central1
   GCP_PROJECT: ${{ secrets.PROJECT_ID_PROD }}
 
@@ -40,6 +37,10 @@ jobs:
 
       - name: Create ENV File
         run: echo ${{ secrets.ENV_PROD }} | base64 --decode > .env
+
+      - name: Run tests with coverage
+        run: |
+          export $(cat .env | grep -v '^#' | xargs) && npm run test:coverage
 
       - name: Google Cloud authentication
         uses: google-github-actions/auth@v1

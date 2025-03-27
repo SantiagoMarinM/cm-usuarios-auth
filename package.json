@@ -19,6 +19,7 @@
         "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/index.js\"",
         "start": "node dist/index.js",
         "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/index.js\"",
+        "test:coverage": "npm run coverage",
         "test": "jest --color --verbose --no-cache --coverage",
         "coverage": "jest --coverage",
         "release": "standard-version"
