@@ -2,7 +2,7 @@
     "name": "cm-usuarios-auth",
     "version": "1.0.0",
     "main": "dist/index.js",
-    "description": "Servicio que se encarga de la autenticación para el proyecto Coonecta",
+    "description": "Servicio que se encarga de la autenticación para el examen de senior",
     "license": "UNLICENSED",
     "private": true,
     "author": {

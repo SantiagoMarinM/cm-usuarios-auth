@@ -15,7 +15,7 @@ export const MANTIENE_ESTADO_ANTERIOR = 2;
 export const ENV = {
     POSTGRES_HOST: process.env.POSTGRES_HOST ?? 'dbcmtest.loc',
     DOMAIN: process.env.DOMAIN ?? 'mio',
-    SERVICE_NAME: process.env.SERVICE_NAME ?? 'cm-coonecta-auth',
+    SERVICE_NAME: process.env.SERVICE_NAME ?? 'cm-usuarios-auth',
     GCP_PROJECT: process.env.GCP_PROJECT ?? 'cm-mio-dev',
     ENV: process.env.ENV ?? 'local',
     PG_PORT: process.env.PG_PORT ?? '5434',
