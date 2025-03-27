@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  SERVICE_NAME: cm-usuarios-auth
+  SERVICE_NAME: santiago-cm-usuarios-auth
   REGION: us-central1
   GCP_PROJECT: ${{ secrets.PROJECT_ID_PROD }}
 
