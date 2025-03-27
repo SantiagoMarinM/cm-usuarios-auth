@@ -1,0 +1,21 @@
+parameters:
+- name: namespaces
+  displayName: 'Namespaces'
+  type: object
+  default: ['apis', 'facturacion', 'conectatest']
+
+trigger: none
+
+
+
+resources:
+  repositories:
+    - repository: template-apis-ci
+      type: git
+      name: DevopsInfrasture/template-apis-ci
+      ref: refs/heads/main-multi-namespaces
+
+extends:
+  template: init.yml@template-apis-ci
+  parameters:
+    namespaces: ${{ parameters.namespaces }}
