@@ -41,11 +41,10 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2.3.1
-        with:
-          name: coverage-report
-          path: coverage/
+      - name: Mostrar resumen de coverage en consola
+        run: |
+          echo "Resumen de cobertura:"
+          npx jest --coverage --coverageReporters=text-summary
 
       - name: Create ENV File
         run: echo ${{ secrets.ENV_PROD }} | base64 --decode > .env
