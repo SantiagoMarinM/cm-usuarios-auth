@@ -140,5 +140,5 @@ curl -X GET http://localhost:3000/validar-token \
 
 ## 🛠️ Autor y mantenimiento
 
-Desarrollado como parte de examen de seniority para la empresa Coordinadora Mercantil.
-Se recomienda utilizar yarn como gestor de paquetes y versiones de Node por encima de 18
+- Desarrollado como parte de examen de seniority para la empresa Coordinadora Mercantil.
+- Se recomienda utilizar yarn como gestor de paquetes y versiones de Node por encima de la 18.
