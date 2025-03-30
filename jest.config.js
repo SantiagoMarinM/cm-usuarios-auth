@@ -17,7 +17,6 @@ module.exports = {
         '!src/infrastructure/app/**',
         '!src/infrastructure/app/**',
         '!src/modules/shared/**',
-        '!src/modules/HealthCheck/dependencies/**',
         '!src/modules/ClienteToken/schemas/**',
         '!src/infrastructure/bd/postgresql/adapter/**',
         '!src/**/adapter/**',
