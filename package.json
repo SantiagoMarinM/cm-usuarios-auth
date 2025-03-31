@@ -10,7 +10,7 @@
         "name": "Coordinadora Mercantil S.A"
     },
     "scripts": {
-        "build": "rimraf dist && tsc -p tsconfig.build.json",
+        "build": "tsc && cp src/infrastructure/app/server/fastify/openapi.json dist/infrastructure/app/server/fastify",
         "infra-as-code": "echo Infrastructure as code",
         "lint": "eslint . --ext .ts --fix",
         "lint-precommit": "lint-staged",

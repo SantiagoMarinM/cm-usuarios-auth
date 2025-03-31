@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="25" failures="0" time="7.018">
-  <testsuite name="Tests de ClienteTokenDAO" errors="0" failures="0" skipped="0" timestamp="2025-03-30T22:50:26" time="2.832" tests="5">
+<testsuites name="jest tests" tests="25" failures="0" time="6.014">
+  <testsuite name="Tests de ClienteTokenDAO" errors="0" failures="0" skipped="0" timestamp="2025-03-31T02:21:36" time="2.864" tests="5">
     <testcase classname="Tests de ClienteTokenDAO crearCliente debería crear un cliente correctamente" name="Tests de ClienteTokenDAO crearCliente debería crear un cliente correctamente" time="0.002">
     </testcase>
     <testcase classname="Tests de ClienteTokenDAO crearCliente debería manejar errores al crear un cliente" name="Tests de ClienteTokenDAO crearCliente debería manejar errores al crear un cliente" time="0">
     </testcase>
-    <testcase classname="Tests de ClienteTokenDAO validarIdCliente debería validar un cliente correctamente" name="Tests de ClienteTokenDAO validarIdCliente debería validar un cliente correctamente" time="0.001">
+    <testcase classname="Tests de ClienteTokenDAO validarIdCliente debería validar un cliente correctamente" name="Tests de ClienteTokenDAO validarIdCliente debería validar un cliente correctamente" time="0">
     </testcase>
     <testcase classname="Tests de ClienteTokenDAO validarIdCliente debería retornar null si el cliente no existe" name="Tests de ClienteTokenDAO validarIdCliente debería retornar null si el cliente no existe" time="0">
     </testcase>
     <testcase classname="Tests de ClienteTokenDAO validarIdCliente debería manejar errores al validar un cliente" name="Tests de ClienteTokenDAO validarIdCliente debería manejar errores al validar un cliente" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="ValidarTokenUseCase" errors="0" failures="0" skipped="0" timestamp="2025-03-30T22:50:26" time="2.853" tests="4">
-    <testcase classname="ValidarTokenUseCase debería validar correctamente si el cliente es válido y el token es correcto" name="ValidarTokenUseCase debería validar correctamente si el cliente es válido y el token es correcto" time="0.014">
+  <testsuite name="GenerarTokenUseCase" errors="0" failures="0" skipped="0" timestamp="2025-03-31T02:21:36" time="2.854" tests="3">
+    <testcase classname="GenerarTokenUseCase debería generar un token si el cliente está activo" name="GenerarTokenUseCase debería generar un token si el cliente está activo" time="0.003">
     </testcase>
-    <testcase classname="ValidarTokenUseCase debería lanzar UNAUTHORIZED si el cliente es null" name="ValidarTokenUseCase debería lanzar UNAUTHORIZED si el cliente es null" time="0.001">
+    <testcase classname="GenerarTokenUseCase debería lanzar UNAUTHORIZED si el cliente no está activo" name="GenerarTokenUseCase debería lanzar UNAUTHORIZED si el cliente no está activo" time="0">
+    </testcase>
+    <testcase classname="GenerarTokenUseCase debería lanzar InternalError si jwt.sign lanza un error" name="GenerarTokenUseCase debería lanzar InternalError si jwt.sign lanza un error" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="ValidarTokenUseCase" errors="0" failures="0" skipped="0" timestamp="2025-03-31T02:21:36" time="2.868" tests="4">
+    <testcase classname="ValidarTokenUseCase debería validar correctamente si el cliente es válido y el token es correcto" name="ValidarTokenUseCase debería validar correctamente si el cliente es válido y el token es correcto" time="0.001">
+    </testcase>
+    <testcase classname="ValidarTokenUseCase debería lanzar UNAUTHORIZED si el cliente es null" name="ValidarTokenUseCase debería lanzar UNAUTHORIZED si el cliente es null" time="0">
     </testcase>
     <testcase classname="ValidarTokenUseCase debería lanzar UNAUTHORIZED si el cliente está inactivo" name="ValidarTokenUseCase debería lanzar UNAUTHORIZED si el cliente está inactivo" time="0">
     </testcase>
     <testcase classname="ValidarTokenUseCase debería lanzar UNAUTHORIZED si jwt.verify lanza error" name="ValidarTokenUseCase debería lanzar UNAUTHORIZED si jwt.verify lanza error" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="GenerarTokenUseCase" errors="0" failures="0" skipped="0" timestamp="2025-03-30T22:50:27" time="2.858" tests="3">
-    <testcase classname="GenerarTokenUseCase debería generar un token si el cliente está activo" name="GenerarTokenUseCase debería generar un token si el cliente está activo" time="0.002">
+  <testsuite name="ValidarIdClienteUseCase" errors="0" failures="0" skipped="0" timestamp="2025-03-31T02:21:36" time="2.964" tests="3">
+    <testcase classname="ValidarIdClienteUseCase debería retornar el cliente desde Redis si existe" name="ValidarIdClienteUseCase debería retornar el cliente desde Redis si existe" time="0.002">
     </testcase>
-    <testcase classname="GenerarTokenUseCase debería lanzar UNAUTHORIZED si el cliente no está activo" name="GenerarTokenUseCase debería lanzar UNAUTHORIZED si el cliente no está activo" time="0.001">
+    <testcase classname="ValidarIdClienteUseCase debería buscar en el repositorio si el cliente no está en Redis" name="ValidarIdClienteUseCase debería buscar en el repositorio si el cliente no está en Redis" time="0">
     </testcase>
-    <testcase classname="GenerarTokenUseCase debería lanzar InternalError si jwt.sign lanza un error" name="GenerarTokenUseCase debería lanzar InternalError si jwt.sign lanza un error" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="ClienteTokenRouter" errors="0" failures="0" skipped="0" timestamp="2025-03-30T22:50:26" time="2.976" tests="5">
-    <testcase classname="ClienteTokenRouter generarToken debería generar un token correctamente" name="ClienteTokenRouter generarToken debería generar un token correctamente" time="0.005">
-    </testcase>
-    <testcase classname="ClienteTokenRouter generarToken debería manejar error al generar un token" name="ClienteTokenRouter generarToken debería manejar error al generar un token" time="0.001">
-    </testcase>
-    <testcase classname="ClienteTokenRouter validarToken debería validar un token correctamente" name="ClienteTokenRouter validarToken debería validar un token correctamente" time="0.002">
-    </testcase>
-    <testcase classname="ClienteTokenRouter validarToken debería manejar error al validar un token" name="ClienteTokenRouter validarToken debería manejar error al validar un token" time="0.001">
-    </testcase>
-    <testcase classname="ClienteTokenRouter eliminarRedis debería eliminar datos de Redis correctamente" name="ClienteTokenRouter eliminarRedis debería eliminar datos de Redis correctamente" time="0.001">
+    <testcase classname="ValidarIdClienteUseCase debería lanzar un error si el cliente no se encuentra" name="ValidarIdClienteUseCase debería lanzar un error si el cliente no se encuentra" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="ValidarIdClienteUseCase" errors="0" failures="0" skipped="0" timestamp="2025-03-30T22:50:27" time="3.034" tests="3">
-    <testcase classname="ValidarIdClienteUseCase debería retornar el cliente desde Redis si existe" name="ValidarIdClienteUseCase debería retornar el cliente desde Redis si existe" time="0.006">
-    </testcase>
-    <testcase classname="ValidarIdClienteUseCase debería buscar en el repositorio si el cliente no está en Redis" name="ValidarIdClienteUseCase debería buscar en el repositorio si el cliente no está en Redis" time="0.001">
-    </testcase>
-    <testcase classname="ValidarIdClienteUseCase debería lanzar un error si el cliente no se encuentra" name="ValidarIdClienteUseCase debería lanzar un error si el cliente no se encuentra" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="Tests de ClientesTokenRedis" errors="0" failures="0" skipped="0" timestamp="2025-03-30T22:50:26" time="3.202" tests="5">
+  <testsuite name="Tests de ClientesTokenRedis" errors="0" failures="0" skipped="0" timestamp="2025-03-31T02:21:36" time="2.99" tests="5">
     <testcase classname="Tests de ClientesTokenRedis setClienteToken debería guardar un cliente en Redis" name="Tests de ClientesTokenRedis setClienteToken debería guardar un cliente en Redis" time="0.001">
     </testcase>
-    <testcase classname="Tests de ClientesTokenRedis getIdCliente debería obtener el valor correctamente desde Redis" name="Tests de ClientesTokenRedis getIdCliente debería obtener el valor correctamente desde Redis" time="0.001">
+    <testcase classname="Tests de ClientesTokenRedis getIdCliente debería obtener el valor correctamente desde Redis" name="Tests de ClientesTokenRedis getIdCliente debería obtener el valor correctamente desde Redis" time="0">
     </testcase>
     <testcase classname="Tests de ClientesTokenRedis getIdCliente debería retornar null si la clave no existe en Redis" name="Tests de ClientesTokenRedis getIdCliente debería retornar null si la clave no existe en Redis" time="0.001">
     </testcase>
     <testcase classname="Tests de ClientesTokenRedis getIdCliente debería manejar errores y retornar null" name="Tests de ClientesTokenRedis getIdCliente debería manejar errores y retornar null" time="0">
     </testcase>
     <testcase classname="Tests de ClientesTokenRedis flushAll debería limpiar toda la data de Redis" name="Tests de ClientesTokenRedis flushAll debería limpiar toda la data de Redis" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="ClienteTokenRouter" errors="0" failures="0" skipped="0" timestamp="2025-03-31T02:21:36" time="3.098" tests="5">
+    <testcase classname="ClienteTokenRouter generarToken debería generar un token correctamente" name="ClienteTokenRouter generarToken debería generar un token correctamente" time="0.002">
+    </testcase>
+    <testcase classname="ClienteTokenRouter generarToken debería manejar error al generar un token" name="ClienteTokenRouter generarToken debería manejar error al generar un token" time="0.001">
+    </testcase>
+    <testcase classname="ClienteTokenRouter validarToken debería validar un token correctamente" name="ClienteTokenRouter validarToken debería validar un token correctamente" time="0.001">
+    </testcase>
+    <testcase classname="ClienteTokenRouter validarToken debería manejar error al validar un token" name="ClienteTokenRouter validarToken debería manejar error al validar un token" time="0">
+    </testcase>
+    <testcase classname="ClienteTokenRouter eliminarRedis debería eliminar datos de Redis correctamente" name="ClienteTokenRouter eliminarRedis debería eliminar datos de Redis correctamente" time="0">
     </testcase>
   </testsuite>
 </testsuites>
