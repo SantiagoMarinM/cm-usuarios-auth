@@ -4,6 +4,8 @@ WORKDIR /root/
 
 COPY package.json yarn.lock ./
 
+EXPOSE 8080
+
 ENV HUSKY=0
 RUN yarn install --production=true
 
