@@ -37,13 +37,15 @@ export class FastifyServer implements IServer {
     private registerDocs = (): void => {
         this.app.get('/docs/json', async (_req, reply) => {
             try {
-                const specPath = path.join(__dirname, 'openapi.json');
+                const specPath = path.resolve(__dirname, 'openapi.json');
                 const json = fs.readFileSync(specPath, 'utf-8');
                 reply.type('application/json').send(JSON.parse(json));
             } catch (error) {
-                reply.code(500).send({ error: 'No se pudo cargar openapi.json', detail: error.message });
+                console.error('Fallo cargando openapi.json:', error.message);
+                reply.code(500).send({ error: 'Error cargando documentación OpenAPI' });
             }
         });
+          
 
         this.app.get('/docs', async (_req, reply) => {
             reply
