@@ -13,4 +13,6 @@ COPY ./dist ./dist/
 
 COPY .env ./
 
+COPY src/infrastructure/app/server/fastify/openapi.json dist/infrastructure/app/server/fastify/
+
 CMD [ "yarn", "start" ]
