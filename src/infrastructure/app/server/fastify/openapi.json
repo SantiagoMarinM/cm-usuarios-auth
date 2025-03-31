@@ -1,0 +1,140 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Cliente Token API",
+        "description": "API para generar y validar tokens de clientes, y limpiar caché de Redis.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Generar Token",
+                "description": "Genera un token JWT basado en los headers proporcionados.",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Bearer abc123"
+                    },
+                    {
+                        "name": "x-client-id",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "cliente_001"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token generado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenerarTokenResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error en validación o generación del token"
+                    }
+                }
+            }
+        },
+        "/validar-token": {
+            "get": {
+                "summary": "Validar Token",
+                "description": "Valida un token JWT enviado en los headers.",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Bearer abc123"
+                    },
+                    {
+                        "name": "x-client-id",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "cliente_001"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token válido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidarTokenResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido"
+                    }
+                }
+            }
+        },
+        "/redis": {
+            "delete": {
+                "summary": "Eliminar Redis",
+                "description": "Elimina todos los datos del caché Redis.",
+                "responses": {
+                    "200": {
+                        "description": "Datos eliminados exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OperacionExitosa"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "GenerarTokenResponse": {
+                "type": "object",
+                "properties": {
+                    "isError": { "type": "boolean", "example": false },
+                    "autorizado": { "type": "boolean", "example": true },
+                    "statusCode": { "type": "integer", "example": 200 },
+                    "token": { "type": "string", "example": "eyJhbGciOi..." },
+                    "message": { "type": "string", "example": "Token generado exitosamente" }
+                }
+            },
+            "ValidarTokenResponse": {
+                "type": "object",
+                "properties": {
+                    "isError": { "type": "boolean", "example": false },
+                    "autorizado": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Token válido" }
+                }
+            },
+            "OperacionExitosa": {
+                "type": "object",
+                "properties": {
+                    "isError": { "type": "boolean", "example": false },
+                    "statusCode": { "type": "integer", "example": 200 },
+                    "message": { "type": "string", "example": "Datos eliminados exitosamente" }
+                }
+            }
+        }
+    }
+}
