@@ -12,6 +12,8 @@ import fastifyCors from '@fastify/cors';
 import { decodeBase64, isValidBase64 } from '@common/utils/base64';
 import { getNestedValue } from '@common/utils';
 import rateLimit from '@fastify/rate-limit';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class FastifyServer implements IServer {
     port: number = +ENV.PORT;
@@ -21,15 +23,51 @@ export class FastifyServer implements IServer {
         this.app = fastify({
             logger: false,
             return503OnClosing: false,
-            bodyLimit: 100 * 1024 * 1024, // 100 MB
+            bodyLimit: 100 * 1024 * 1024,
             genReqId: (_) => randomBytes(20).toString('hex'),
         });
-        // this.registerSwagger()
+
         this.printRoutes();
         this.errorHandler();
         this.printIncomming();
         this.addRateLimit();
+        this.registerDocs(); // 👈 Redoc aquí
     }
+
+    private registerDocs = (): void => {
+        this.app.get('/docs/json', async (_req, reply) => {
+            const specPath = path.join(__dirname, 'openapi.json');
+            const json = fs.readFileSync(specPath, 'utf-8');
+            reply.type('application/json').send(JSON.parse(json));
+        });
+
+        this.app.get('/docs', async (_req, reply) => {
+            reply
+                .code(200)
+                .type('text/html')
+                .header(
+                    'Content-Security-Policy',
+                    "default-src 'self' https://cdn.redoc.ly blob:; " +
+                        "script-src 'self' https://cdn.redoc.ly 'unsafe-inline' blob:; " +
+                        "style-src 'self' https://cdn.redoc.ly 'unsafe-inline';",
+                ).send(`
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <title>Redoc</title>
+                    <meta charset="utf-8" />
+                    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+                  </head>
+                  <body>
+                    <div id="redoc-container"></div>
+                    <script>
+                      Redoc.init('/docs/json', {}, document.getElementById('redoc-container'));
+                    </script>
+                  </body>
+                </html>
+              `);
+        });
+    };
 
     private addRateLimit = () => {
         this.app.register(rateLimit, {
@@ -82,16 +120,19 @@ export class FastifyServer implements IServer {
             },
         });
     };
+
     private errorHandler = () => {
         this.app.setErrorHandler((error, _request, reply) => {
             if (error?.validation?.length) {
                 error.statusCode = 400;
             }
-            const errorResponse = error instanceof CustomError ? this.buildResponseError(error) : this.buildDefaultError(error);
+            const errorResponse =
+                error instanceof CustomError ? this.buildResponseError(error) : this.buildDefaultError(error);
             const statusCode = error?.statusCode && +error.statusCode > 0 ? error.statusCode : 500;
             reply.status(statusCode).send(errorResponse);
         });
     };
+
     buildResponseError(error: CustomError): DefaultErrorModel {
         return {
             statusCode: error.statusCode,
@@ -104,6 +145,7 @@ export class FastifyServer implements IServer {
             details: error,
         };
     }
+
     buildDefaultError(error: FastifyError): DefaultErrorModel {
         return {
             message: error?.message ?? 'Error sin mensaje',
@@ -140,16 +182,11 @@ export class FastifyServer implements IServer {
                         router.post(url, schema, async (req: FastifyRequest<any>, reply: FastifyReply) => {
                             const { logger } = req as any;
                             const headers = req.headers;
-
                             const data = {
                                 ...(req.body as Record<string, unknown>),
                                 ...(req.params as Record<string, unknown>),
                             };
-                            const request = {
-                                data,
-                                logger,
-                                headers,
-                            };
+                            const request = { data, logger, headers };
                             const result = await ruta.evento(request);
                             reply.header('Content-Type', 'application/json');
                             reply.status(result.status).send(JSON.stringify(result.response));
@@ -221,6 +258,7 @@ export class FastifyServer implements IServer {
             prefix: prefix + module.ruta,
         });
     };
+
     start = async (): Promise<void> => {
         try {
             await this.app.listen({ port: this.port });
