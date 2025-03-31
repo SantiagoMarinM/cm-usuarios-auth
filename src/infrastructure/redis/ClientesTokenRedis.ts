@@ -35,7 +35,7 @@ export class ClientesTokenRedis implements IClienteRedis {
         try {
             this.redis.flushall();
         } catch (error) {
-            console.log('Error eliminando data de redis ==> ', JSON.stringify(error));
+            console.log('Error eliminando data de redis: ==> ', JSON.stringify(error));
         }
     }
 }
